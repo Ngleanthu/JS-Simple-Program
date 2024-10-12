@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>IA02</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            clifford: "#da373d",
+                            red: "#cd2027",
+                            gray: {
+                                100: "#f3f4f6",
+                                200: "#e5e7eb",
+                                300: "#d1d5db",
+                                400: "#9ca3af",
+                                700: "#374151",
+                            },
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+    <body class="grid place-content-center h-screen mx-10">
+        <h1 class="font-bold text-4xl mb-10">Bé tập tính</h1>
+        <form
+            class="grid grid-cols-2 gap-8"
+            name="frm"
+            onsubmit="return false;"
+        >
+            <div class="flex flex-col justify-between h-full">
+                <label>
+                    <span class="w-28 inline-block mb-4">Số thứ nhất: </span>
+                    <input
+                        type="text"
+                        name="num1"
+                        class="border-2 border-gray-400 h-8"
+                        onblur="validateNumber(this)"
+                    />
+                </label>
+                <label>
+                    <span class="w-28 inline-block mb-4">Số thứ hai: </span>
+                    <input
+                        type="text"
+                        name="num2"
+                        class="border-2 border-gray-400 h-8"
+                        onblur="validateNumber(this)"
+                    />
+                </label>
+                <label>
+                    <span class="w-28 inline-block">Kết quả</span>
+                    <input
+                        type="text"
+                        id="result"
+                        class="border-2 border-gray-400 h-8"
+                        readonly
+                    />
+                </label>
+                <div id="error-message" class="text-red-500 mt-2"></div>
+            </div>
+            <div class="flex flex-col justify-between h-full">
+                <div>
+                    <label class="mr-4">
+                        <input
+                            type="radio"
+                            name="operation"
+                            value="+"
+                            class="form-radio h-4 w-4"
+                        />
+                        Cộng
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            name="operation"
+                            value="-"
+                            class="form-radio h-4 w-4"
+                        />
+                        Trừ
+                    </label>
+                </div>
+                <div class="my-4">
+                    <label class="mr-4">
+                        <input
+                            type="radio"
+                            name="operation"
+                            value="*"
+                            class="form-radio h-4 w-4"
+                        />
+                        Nhân
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            name="operation"
+                            value="/"
+                            class="form-radio h-4 w-4"
+                        />
+                        Chia
+                    </label>
+                </div>
+                <input
+                    type="button"
+                    value="Tính"
+                    class="border-2 border-gray-300 bg-gradient-to-b from-gray-100 to-gray-300 w-20 h-8 hover:border-gray-400"
+                    onclick="compute(this.form)"
+                />
+            </div>
+        </form>
+        <script>
+            function validateNumber(input) {
+                const value = input.value;
+                const isValid = /^-?\d*\.?\d+$/.test(value);
+                if (!isValid && value !== "") {
+                    alert("Vui lòng nhập một số hợp lệ.");
+                    input.value = "";
+                }
+            }
+
+            function compute(frm) {
+                const num1 = parseFloat(frm.num1.value);
+                const num2 = parseFloat(frm.num2.value);
+                const operation = frm.operation.value;
+                const errorMessageElement =
+                    document.getElementById("error-message");
+                errorMessageElement.textContent = "";
+
+                if (!operation) {
+                    errorMessageElement.textContent =
+                        "Vui lòng chọn một phép toán.";
+                    return;
+                }
+
+                if (isNaN(num1) || isNaN(num2)) {
+                    errorMessageElement.textContent =
+                        "Vui lòng nhập hai số hợp lệ.";
+                    return;
+                }
+
+                let result;
+
+                switch (operation) {
+                    case "+":
+                        result = num1 + num2;
+                        break;
+                    case "-":
+                        result = num1 - num2;
+                        break;
+                    case "*":
+                        result = num1 * num2;
+                        break;
+                    case "/":
+                        if (num2 === 0) {
+                            errorMessageElement.textContent =
+                                "Không thể chia cho 0.";
+                            return;
+                        }
+                        result = num1 / num2;
+                        break;
+                    default:
+                        errorMessageElement.textContent = "Có lỗi xảy ra.";
+                        return;
+                }
+
+                document.getElementById("result").value = result;
+            }
+        </script>
+    </body>
+</html>
